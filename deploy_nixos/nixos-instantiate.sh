@@ -14,15 +14,19 @@ command=(nix-instantiate --show-trace --expr '
   let
     importFromFlake = { nixosConfig }:
         let
+          parts = (import <nixpkgs/lib>).splitString "#" nixosConfig;
+          hasFlakeAttr = builtins.length parts > 1;
+          src = if hasFlakeAttr then builtins.elemAt parts 0 else ./.;
+          flakeConfig = if hasFlakeAttr then builtins.elemAt parts 1 else nixosConfig;
           flake = (import (
                     fetchTarball {
                       url = "https://github.com/edolstra/flake-compat/archive/99f1c2157fba4bfe6211a321fd0ee43199025dbf.tar.gz";
                       sha256 = "0x2jn3vrawwv9xp15674wjz9pixwjyj3j771izayl962zziivbx2"; }
                   ) {
-                    src =  ./.;
+                    inherit src;
                   }).defaultNix;
         in
-          builtins.getAttr nixosConfig flake.nixosConfigurations;
+          builtins.getAttr flakeConfig flake.nixosConfigurations;
     os =
       if flake
          then importFromFlake { nixosConfig = configuration; }
