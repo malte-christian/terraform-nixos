@@ -120,8 +120,8 @@ locals {
   }
 
   extra_build_args = concat([
-    "--option", "substituters", data.external.nixos-instantiate.result["substituters"],
-    "--option", "trusted-public-keys", data.external.nixos-instantiate.result["trusted-public-keys"],
+    # "--option", "substituters", data.external.nixos-instantiate.result["substituters"],
+    # "--option", "trusted-public-keys", data.external.nixos-instantiate.result["trusted-public-keys"],
     ],
     var.extra_build_args,
   )
