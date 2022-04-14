@@ -12,7 +12,8 @@ buildArgs=(
 profile=/nix/var/nix/profiles/system
 # will be set later
 sshOpts=(
-  -o "ControlMaster=auto"
+    # workaround for: https://github.com/NixOS/nixpkgs/issues/118655
+  -o "ControlMaster=no"
   -o "ControlPersist=60"
   # Avoid issues with IP re-use. This disable TOFU security.
   -o "StrictHostKeyChecking=no"
